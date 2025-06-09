@@ -1,5 +1,7 @@
 const API_URL = 'http://localhost:5678/api';
 
+
+//this function retrieves all projects
 async function fetchWorks() {
     try {
         const response = await fetch(`${API_URL}/works`);
@@ -32,7 +34,7 @@ function displayWorks(works) {
 //dynamically add filter buttons + helper methods
 async function fetchCategories() {
     try {
-        // Fixed: removed quotes around template literal
+        // await the response using a template literal plus API variable
         const response = await fetch(`${API_URL}/categories`);
         const categories = await response.json();
         return categories;
@@ -49,7 +51,6 @@ function createFilterButtons(categories, works) {
     const filterContainer = document.createElement('div');
     filterContainer.className = 'filters';
 
-    // Fixed: removed 'n' from 'ndocument'
     const allButton = document.createElement('button');
     allButton.textContent = 'All';
     allButton.className = 'filter-btn active';
