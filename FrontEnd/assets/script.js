@@ -1,0 +1,94 @@
+const API_URL = 'http://localhost:5678/api';
+
+async function fetchWorks() {
+    try {
+        const response = await fetch(`${API_URL}/works`);
+        const works = await response.json();
+        return works;
+    } catch (error) {
+        console.error('Error fetching works:', error);
+        return [];
+    }
+}
+
+function displayWorks(works) {
+    // find the gallery section Document Object
+    const gallery = document.querySelector('.gallery');
+    //clear it
+    gallery.innerHTML = '';
+
+    //map each work to a Figure element
+    works.forEach(work => {
+        const figure = document.createElement('figure');
+        figure.innerHTML = `
+            <img src="${work.imageUrl}" alt="${work.title}">
+            <figcaption>${work.title}</figcaption>
+        `;
+
+        gallery.appendChild(figure);
+    });
+}
+
+//dynamically add filter buttons + helper methods
+async function fetchCategories() {
+    try {
+        // Fixed: removed quotes around template literal
+        const response = await fetch(`${API_URL}/categories`);
+        const categories = await response.json();
+        return categories;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+    }
+}
+
+function createFilterButtons(categories, works) {
+    const portfolioSection = document.getElementById('portfolio');
+    const title = portfolioSection.querySelector('h2');
+
+    const filterContainer = document.createElement('div');
+    filterContainer.className = 'filters';
+
+    // Fixed: removed 'n' from 'ndocument'
+    const allButton = document.createElement('button');
+    allButton.textContent = 'All';
+    allButton.className = 'filter-btn active';
+    allButton.addEventListener('click', () => {
+        displayWorks(works);
+        setActiveFilter(allButton);
+    });
+
+    filterContainer.appendChild(allButton);
+
+    categories.forEach(category => {
+        const button = document.createElement('button');
+        button.textContent = category.name;
+        button.className = 'filter-btn';
+        button.addEventListener('click', () => {
+            const filteredWorks = works.filter(work => work.categoryId === category.id);
+            displayWorks(filteredWorks);
+            setActiveFilter(button);
+        });
+        filterContainer.appendChild(button);
+    });
+
+    title.insertAdjacentElement('afterend', filterContainer);
+}
+
+function setActiveFilter(activeButton) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    activeButton.classList.add('active');
+}
+
+async function initGallery() {
+    const works = await fetchWorks();
+    const categories = await fetchCategories();
+    
+    displayWorks(works);
+    createFilterButtons(categories, works);
+}
+
+//event listener waits for the page to load
+document.addEventListener('DOMContentLoaded', initGallery);
