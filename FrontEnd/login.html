@@ -1,26 +1,107 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-	<title>Sophie Bluel - Interior Designer</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
-	<meta name="description" content="">
-	<link rel="stylesheet" href="./assets/style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sophie Bluel - Please Log In</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content=""
+    />
+    <link
+      rel="stylesheet"
+      href="./assets/style.css"
+    />
+  </head>
 
-<body>
+  <body>
     <header>
-
+      <h1>Sophie Bluel <span>Interior Designer</span></h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="index.html">projects</a>
+          </li>
+          <li><a href="#contact">contact</a></li>
+          <li>
+            <a
+              href="login.html"
+              class="active"
+              >login</a
+            >
+          </li>
+          <li>
+            <img
+              src="./assets/icons/instagram.png"
+              alt="Instagram"
+            />
+          </li>
+        </ul>
+      </nav>
     </header>
 
     <main>
-
+      <section id="login">
+        <h2>Login</h2>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <div
+            class="error-message"
+            id="error-message"
+            style="display: none"
+          >
+            Error in username or password
+          </div>
+          <button type="submit">Sign in</button>
+        </form>
+        <a
+          href="#"
+          class="forgot-password"
+          >Forgot your password?</a
+        >
+      </section>
     </main>
 
     <footer>
-
+      <nav>
+        <ul>
+          <li>Legal Notice</li>
+        </ul>
+      </nav>
     </footer>
-</body>
+    <script src="./assets/js/login.js"></script>
+  </body>
+</html>
