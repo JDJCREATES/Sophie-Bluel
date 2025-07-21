@@ -129,6 +129,77 @@
         </ul>
       </nav>
     </footer>
+    
+    <!-- Modal Overlay -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-wrapper">
+            <div class="modal-container">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button id="btn-back" class="btn-back" style="display: none;" aria-label="Go back to gallery">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button id="btn-close" class="btn-close" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="modal-content">
+                    <!-- Gallery View (First Modal) -->
+                    <div id="modal-gallery" class="modal-view">
+                        <h3>Photo Gallery</h3>
+                        <div class="gallery-modal" id="gallery-modal">
+                            <!-- Gallery items will be dynamically inserted here -->
+                        </div>
+                        <hr>
+                        <button id="btn-add-photo" class="btn btn-primary">Add a photo</button>
+                    </div>
+
+                    <!-- Add Photo View (Second Modal) -->
+                    <div id="modal-add-photo" class="modal-view" style="display: none;">
+                        <h3>Add Photo</h3>
+                        <form id="form-add-photo" class="form-add-photo">
+                            <!-- Photo Upload Area -->
+                            <div class="photo-upload" id="photo-upload">
+                                <div class="upload-area" id="upload-area">
+                                    <i class="fa-regular fa-image"></i>
+                                    <label for="file-input" class="btn-upload">+ Add photo</label>
+                                    <input type="file" id="file-input" name="image" accept="image/jpeg, image/png" style="display: none;">
+                                    <p>jpg, png : 4mb max</p>
+                                </div>
+                                <div class="photo-preview" id="photo-preview" style="display: none;">
+                                    <img id="preview-img" src="" alt="Image preview">
+                                    <button type="button" id="btn-remove-photo" class="btn-remove" aria-label="Remove selected photo">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Form Fields -->
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" id="title" name="title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" name="category" required>
+                                    <option value="">Select a category</option>
+                                </select>
+                            </div>
+
+                            <hr>
+                            
+                            <button type="submit" id="btn-validate" class="btn btn-primary" disabled>Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="./assets/script.js"></script>
+    <script src="./assets/modal.js"></script>
   </body>
 </html>

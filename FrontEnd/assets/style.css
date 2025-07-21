@@ -424,3 +424,281 @@ nav .active {
 	font-size: 14px;
 	font-weight: 400;
 }
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 10px;
+  width: 630px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 60px;
+  box-sizing: border-box;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  right: 30px;
+}
+
+.btn-back,
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
+  padding: 5px;
+}
+
+.btn-back:hover,
+.btn-close:hover {
+  color: #b1663c;
+}
+
+.modal-content {
+  margin-top: 30px;
+}
+
+.modal-content h3 {
+  font-family: "Work Sans";
+  font-size: 26px;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+  margin-bottom: 46px;
+}
+
+/* Gallery Modal Styles */
+.gallery-modal {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 47px;
+}
+
+.gallery-item {
+  position: relative;
+  margin: 0;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 104px;
+  object-fit: cover;
+}
+
+.btn-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #000;
+  color: white;
+  border: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+}
+
+.btn-delete:hover {
+  background: #b1663c;
+}
+
+/* Modal HR */
+.modal-content hr {
+  border: none;
+  height: 1px;
+  background-color: #b3b3b3;
+  margin: 47px 0 38px 0;
+}
+
+/* Modal Buttons */
+.btn {
+  font-family: "Syne";
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 60px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 49px;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #1d6154;
+  color: white;
+  margin: 0 auto;
+  display: block;
+}
+
+.btn-primary:hover {
+  background-color: #0e2f28;
+}
+
+.btn-primary:disabled {
+  background-color: #a7a7a7;
+  cursor: not-allowed;
+}
+
+/* Add Photo Form Styles */
+.form-add-photo {
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-upload {
+  margin-bottom: 30px;
+}
+
+.upload-area {
+  background-color: #e8f1f6;
+  border-radius: 3px;
+  padding: 28px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-area i {
+  font-size: 58px;
+  color: #b9c5cc;
+}
+
+.btn-upload {
+  background-color: #cbd6dc;
+  color: #306685;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 33px;
+  font-family: "Work Sans";
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-upload:hover {
+  background-color: #b9c5cc;
+}
+
+.upload-area p {
+  font-family: "Work Sans";
+  font-size: 10px;
+  color: #444444;
+  margin: 0;
+}
+
+.photo-preview {
+  position: relative;
+  text-align: center;
+}
+
+.photo-preview img {
+  max-width: 100%;
+  max-height: 169px;
+  object-fit: contain;
+}
+
+.btn-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #000;
+  color: white;
+  border: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+}
+
+.btn-remove:hover {
+  background: #b1663c;
+}
+
+.form-group {
+  margin-bottom: 21px;
+}
+
+.form-group label {
+  font-family: "Work Sans";
+  font-weight: 500;
+  font-size: 14px;
+  color: #3d3d3d;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 50px;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  font-size: 14px;
+  font-family: "Work Sans";
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border: 2px solid #1d6154;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .modal-container {
+    width: 95vw;
+    padding: 40px 20px;
+  }
+  
+  .gallery-modal {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .modal-header {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+  }
+}
