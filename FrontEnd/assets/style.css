@@ -192,13 +192,14 @@ li:hover {
 #introduction {
   display: flex;
   align-items: center;
+  margin-bottom: 139px;
+  margin-top: 92px;
 }
 #introduction figure {
   flex: 1;
 }
 #introduction img {
   display: block;
-  margin: auto;
   width: 80%;
 }
 
@@ -405,24 +406,23 @@ nav .active {
   }
 }
 
-
 .edit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 29px;
-    cursor: pointer;
-    font-family: 'Work Sans';
-    color: #000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 29px;
+  cursor: pointer;
+  font-family: "Work Sans";
+  color: #000;
 }
 
 .edit-btn i {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .edit-text {
-	font-size: 14px;
-	font-weight: 400;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 /* Modal Styles */
@@ -691,14 +691,55 @@ nav .active {
     width: 95vw;
     padding: 40px 20px;
   }
-  
+
   .gallery-modal {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .modal-header {
     top: 20px;
     left: 20px;
     right: 20px;
   }
+}
+
+/* Edit bar styles */
+.edit-bar {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 59px;
+  font-family: "Work Sans", sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+body.edit-mode .edit-bar {
+  display: flex;
+}
+.edit-bar-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.edit-bar .fa-pen-to-square {
+  font-size: 1.3em;
+}
+.btn-logout {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 700;
+}
+body.edit-mode {
+  padding-top: 60px;
 }

@@ -15,10 +15,9 @@ async function fetchWorks() {
 function displayWorks(works) {
   // find the gallery section Document Object
   const gallery = document.querySelector(".gallery");
-  //clear it
+
   gallery.innerHTML = "";
 
- 
   works.forEach((work) => {
     const figure = document.createElement("figure");
     figure.innerHTML = `
@@ -90,14 +89,12 @@ async function initGallery() {
 
   displayWorks(works);
 
-
   const authToken = localStorage.getItem("authToken");
   if (authToken) {
     // user is logged in - show edit button, hide filters
     showEditButton();
     updateNavigation();
   } else {
-  
     createFilterButtons(categories, works);
   }
 }
@@ -137,42 +134,49 @@ function logout() {
 }
 
 function openModal() {
-  let modal = document.getElementById('modal');
+  let modal = document.getElementById("modal");
   if (!modal) {
-    console.error('Modal not found in DOM');
+    console.error("Modal not found in DOM");
     return;
   }
-  
+
+  if (!isEditing) {
+    toggleEditMode();
+  }
+
   // Reset modal to gallery view
-  document.getElementById('modal-gallery').style.display = 'block';
-  document.getElementById('modal-add-photo').style.display = 'none';
-  document.getElementById('btn-back').style.display = 'none';
-  
+  document.getElementById("modal-gallery").style.display = "block";
+  document.getElementById("modal-add-photo").style.display = "none";
+  document.getElementById("btn-back").style.display = "none";
+
   // Reset form
   resetAddPhotoForm();
-  
-  modal.style.display = 'flex';
+
+  modal.style.display = "flex";
   loadModalGallery();
 }
 
 function closeModal() {
-  const modal = document.getElementById('modal');
+  const modal = document.getElementById("modal");
   if (modal) {
-    modal.style.display = 'none';
+    modal.style.display = "none";
   }
+
+  toggleEditMode(); // Exit edit mode when closing modal
+  
 }
 
 async function loadModalGallery() {
   const works = await fetchWorks();
-  const galleryModal = document.getElementById('gallery-modal');
+  const galleryModal = document.getElementById("gallery-modal");
 
   if (!galleryModal) return;
-  
-  galleryModal.innerHTML = '';
-  
-  works.forEach(work => {
-    const figure = document.createElement('figure');
-    figure.className = 'gallery-item';
+
+  galleryModal.innerHTML = "";
+
+  works.forEach((work) => {
+    const figure = document.createElement("figure");
+    figure.className = "gallery-item";
     figure.innerHTML = `
       <img src="${work.imageUrl}" alt="${work.title}">
       <button class="btn-delete" data-id="${work.id}">
@@ -181,10 +185,10 @@ async function loadModalGallery() {
     `;
     galleryModal.appendChild(figure);
   });
-  
+
   // Add delete functionality
-  document.querySelectorAll('.btn-delete').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  document.querySelectorAll(".btn-delete").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       const workId = e.currentTarget.dataset.id;
       deleteWork(workId);
     });
@@ -192,16 +196,16 @@ async function loadModalGallery() {
 }
 
 async function deleteWork(workId) {
-  const authToken = localStorage.getItem('authToken');
-  
+  const authToken = localStorage.getItem("authToken");
+
   try {
     const response = await fetch(`${API_URL}/works/${workId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     });
-    
+
     if (response.ok) {
       // Refresh both galleries
       loadModalGallery();
@@ -209,71 +213,84 @@ async function deleteWork(workId) {
       displayWorks(works);
     }
   } catch (error) {
-    console.error('Error deleting work:', error);
+    console.error("Error deleting work:", error);
+  }
+}
+
+let isEditing = false;
+
+function toggleEditMode() {
+  isEditing = !isEditing; // toggle the editing state!
+
+  const editBar = document.getElementById("edit-bar");
+  if (isEditing) {
+    document.body.classList.add("edit-mode");
+    editBar.style.display = "flex";
+  } else {
+    document.body.classList.remove("edit-mode");
+    editBar.style.display = "none";
   }
 }
 
 // event listener waits for the page to load
 document.addEventListener("DOMContentLoaded", () => {
   initGallery();
-  
+
   // Modal close functionality
-  const closeBtn = document.getElementById('btn-close');
+  const closeBtn = document.getElementById("btn-close");
   if (closeBtn) {
-    closeBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener("click", closeModal);
   }
-  
+
   // Close modal when clicking outside
-  const modal = document.getElementById('modal');
+  const modal = document.getElementById("modal");
   if (modal) {
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         closeModal();
       }
     });
   }
-  
+
   // Add photo button - switch to add photo view
-  const addPhotoBtn = document.getElementById('btn-add-photo');
+  const addPhotoBtn = document.getElementById("btn-add-photo");
   if (addPhotoBtn) {
-    addPhotoBtn.addEventListener('click', () => {
-      document.getElementById('modal-gallery').style.display = 'none';
-      document.getElementById('modal-add-photo').style.display = 'block';
-      document.getElementById('btn-back').style.display = 'block';
+    addPhotoBtn.addEventListener("click", () => {
+      document.getElementById("modal-gallery").style.display = "none";
+      document.getElementById("modal-add-photo").style.display = "block";
+      document.getElementById("btn-back").style.display = "block";
       loadCategories(); // Load categories when switching to add photo view
     });
   }
-  
+
   // Back button - return to gallery view
-  const backBtn = document.getElementById('btn-back');
+  const backBtn = document.getElementById("btn-back");
   if (backBtn) {
-    backBtn.addEventListener('click', () => {
+    backBtn.addEventListener("click", () => {
       resetAddPhotoForm();
-      document.getElementById('modal-add-photo').style.display = 'none';
-      document.getElementById('modal-gallery').style.display = 'block';
-      document.getElementById('btn-back').style.display = 'none';
+      document.getElementById("modal-add-photo").style.display = "none";
+      document.getElementById("modal-gallery").style.display = "block";
+      document.getElementById("btn-back").style.display = "none";
     });
   }
-  
+
   // File input handling
-  const fileInput = document.getElementById('file-input');
-  const uploadArea = document.getElementById('upload-area');
-  const uploadLabel = document.querySelector('.btn-upload');
-  const removePhotoBtn = document.getElementById('btn-remove-photo');
-  const addPhotoForm = document.getElementById('form-add-photo');
-  
+  const fileInput = document.getElementById("file-input");
+  const removePhotoBtn = document.getElementById("btn-remove-photo");
+  const addPhotoForm = document.getElementById("form-add-photo");
+
   if (fileInput) {
-    fileInput.addEventListener('change', handleFileSelect);
+    fileInput.addEventListener("change", handleFileSelect);
   }
-  
+
   if (removePhotoBtn) {
-    removePhotoBtn.addEventListener('click', removePhoto);
+    removePhotoBtn.addEventListener("click", removePhoto);
   }
-  
+
   if (addPhotoForm) {
-    addPhotoForm.addEventListener('submit', handleFormSubmit);
-    addPhotoForm.addEventListener('input', validateForm);
-    addPhotoForm.addEventListener('change', validateForm);
+    addPhotoForm.addEventListener("submit", handleFormSubmit);
+    addPhotoForm.addEventListener("input", validateForm);
+    addPhotoForm.addEventListener("change", validateForm);
   }
 });
 
@@ -282,21 +299,22 @@ function handleFileSelect(e) {
   const file = e.target.files[0];
   if (file) {
     // Validate file type and size
-    if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
-      showError('Please select a JPG or PNG image.');
+    if (!file.type.match("image/jpeg") && !file.type.match("image/png")) {
+      showError("Please select a JPG or PNG image.");
       return;
     }
-    
-    if (file.size > 4 * 1024 * 1024) { // 4MB limit
-      showError('File size must be less than 4MB.');
+
+    if (file.size > 4 * 1024 * 1024) {
+      // 4MB limit
+      showError("File size must be less than 4MB.");
       return;
     }
-    
+
     const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById('preview-img').src = e.target.result;
-      document.getElementById('upload-area').style.display = 'none';
-      document.getElementById('photo-preview').style.display = 'block';
+    reader.onload = function (e) {
+      document.getElementById("preview-img").src = e.target.result;
+      document.getElementById("upload-area").style.display = "none";
+      document.getElementById("photo-preview").style.display = "block";
       validateForm();
     };
     reader.readAsDataURL(file);
@@ -305,21 +323,21 @@ function handleFileSelect(e) {
 
 // Remove photo preview
 function removePhoto() {
-  document.getElementById('file-input').value = '';
-  document.getElementById('upload-area').style.display = 'flex';
-  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById("file-input").value = "";
+  document.getElementById("upload-area").style.display = "flex";
+  document.getElementById("photo-preview").style.display = "none";
   validateForm();
 }
 
 // Load categories into select dropdown
 async function loadCategories() {
   const categories = await fetchCategories();
-  const categorySelect = document.getElementById('category');
-  
+  const categorySelect = document.getElementById("category");
+
   if (categorySelect && categories.length > 0) {
     categorySelect.innerHTML = '<option value="">Select a category</option>';
-    categories.forEach(category => {
-      const option = document.createElement('option');
+    categories.forEach((category) => {
+      const option = document.createElement("option");
       option.value = category.id;
       option.textContent = category.name;
       categorySelect.appendChild(option);
@@ -329,109 +347,108 @@ async function loadCategories() {
 
 // Validate form and enable/disable submit button
 function validateForm() {
-  const fileInput = document.getElementById('file-input');
-  const title = document.getElementById('title');
-  const category = document.getElementById('category');
-  const validateBtn = document.getElementById('btn-validate');
-  
+  const fileInput = document.getElementById("file-input");
+  const title = document.getElementById("title");
+  const category = document.getElementById("category");
+  const validateBtn = document.getElementById("btn-validate");
+
   // Clear any existing error messages
   clearError();
-  
+
   // Check if all required fields are filled
   const hasFile = fileInput && fileInput.files.length > 0;
-  const hasTitle = title && title.value.trim() !== '';
-  const hasCategory = category && category.value !== '';
-  
+  const hasTitle = title && title.value.trim() !== "";
+  const hasCategory = category && category.value !== "";
+
   const isValid = hasFile && hasTitle && hasCategory;
-  
+
   if (validateBtn) {
     validateBtn.disabled = !isValid;
-    validateBtn.style.backgroundColor = isValid ? '#1d6154' : '#a7a7a7';
+    validateBtn.style.backgroundColor = isValid ? "#1d6154" : "#a7a7a7";
   }
-  
+
   return isValid;
 }
 
 // Handle form submission
 async function handleFormSubmit(e) {
   e.preventDefault();
-  
+
   // Final validation before submission
   if (!validateForm()) {
-    showError('Please fill in all required fields.');
+    showError("Please fill in all required fields.");
     return;
   }
-  
+
   const formData = new FormData();
-  const fileInput = document.getElementById('file-input');
-  const title = document.getElementById('title');
-  const category = document.getElementById('category');
-  
+  const fileInput = document.getElementById("file-input");
+  const title = document.getElementById("title");
+  const category = document.getElementById("category");
+
   // Prepare form data
-  formData.append('image', fileInput.files[0]);
-  formData.append('title', title.value.trim());
-  formData.append('category', category.value);
-  
-  const authToken = localStorage.getItem('authToken');
-  
+  formData.append("image", fileInput.files[0]);
+  formData.append("title", title.value.trim());
+  formData.append("category", category.value);
+
+  const authToken = localStorage.getItem("authToken");
+
   if (!authToken) {
-    showError('You must be logged in to add a project.');
+    showError("You must be logged in to add a project.");
     return;
   }
-  
+
   try {
     // Disable submit button during submission
-    const validateBtn = document.getElementById('btn-validate');
+    const validateBtn = document.getElementById("btn-validate");
     if (validateBtn) {
       validateBtn.disabled = true;
-      validateBtn.textContent = 'Adding...';
+      validateBtn.textContent = "Adding...";
     }
-    
+
     const response = await fetch(`${API_URL}/works`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        Authorization: `Bearer ${authToken}`,
       },
-      body: formData
+      body: formData,
     });
-    
+
     if (response.ok) {
       const newWork = await response.json();
-      
+
       // Success! Add the new work to both galleries dynamically
       addWorkToGallery(newWork);
       addWorkToModalGallery(newWork);
-      
+
       // Reset form and return to gallery view
       resetAddPhotoForm();
-      document.getElementById('modal-add-photo').style.display = 'none';
-      document.getElementById('modal-gallery').style.display = 'block';
-      document.getElementById('btn-back').style.display = 'none';
-      
-      showSuccess('Project added successfully!');
-      
+      document.getElementById("modal-add-photo").style.display = "none";
+      document.getElementById("modal-gallery").style.display = "block";
+      document.getElementById("btn-back").style.display = "none";
+
+      showSuccess("Project added successfully!");
     } else {
       const errorData = await response.json();
-      showError(errorData.message || 'Error adding project. Please try again.');
+      showError(errorData.message || "Error adding project. Please try again.");
     }
   } catch (error) {
-    console.error('Error:', error);
-    showError('Network error. Please check your connection and try again.');
+    console.error("Error:", error);
+    showError("Network error. Please check your connection and try again.");
   } finally {
     // Re-enable submit button
-    const validateBtn = document.getElementById('btn-validate');
+    const validateBtn = document.getElementById("btn-validate");
     if (validateBtn) {
       validateBtn.disabled = false;
-      validateBtn.textContent = 'Confirm';
+      validateBtn.textContent = "Confirm";
     }
   }
 }
 
 // Add new work to main gallery (Step 3.4 requirement)
 function addWorkToGallery(work) {
-  const gallery = document.querySelector('.gallery');
+  const gallery = document.querySelector(".gallery");
   if (gallery) {
-    const figure = document.createElement('figure');
+    const figure = document.createElement("figure");
     figure.innerHTML = `
       <img src="${work.imageUrl}" alt="${work.title}">
       <figcaption>${work.title}</figcaption>
@@ -442,39 +459,39 @@ function addWorkToGallery(work) {
 
 // Add new work to modal gallery (Step 3.4 requirement)
 function addWorkToModalGallery(work) {
-  const galleryModal = document.getElementById('gallery-modal');
+  const galleryModal = document.getElementById("gallery-modal");
   if (galleryModal) {
-    const figure = document.createElement('figure');
-    figure.className = 'gallery-item';
+    const figure = document.createElement("figure");
+    figure.className = "gallery-item";
     figure.innerHTML = `
       <img src="${work.imageUrl}" alt="${work.title}">
       <button class="btn-delete" data-id="${work.id}">
         <i class="fa-solid fa-trash-can"></i>
       </button>
     `;
-    
+
     // Add delete functionality to the new item
-    const deleteBtn = figure.querySelector('.btn-delete');
-    deleteBtn.addEventListener('click', (e) => {
+    const deleteBtn = figure.querySelector(".btn-delete");
+    deleteBtn.addEventListener("click", (e) => {
       const workId = e.currentTarget.dataset.id;
       deleteWork(workId);
     });
-    
+
     galleryModal.appendChild(figure);
   }
 }
 
 // Reset the add photo form
 function resetAddPhotoForm() {
-  const form = document.getElementById('form-add-photo');
+  const form = document.getElementById("form-add-photo");
   if (form) {
     form.reset();
   }
-  
+
   // Reset file preview
-  document.getElementById('upload-area').style.display = 'flex';
-  document.getElementById('photo-preview').style.display = 'none';
-  
+  document.getElementById("upload-area").style.display = "flex";
+  document.getElementById("photo-preview").style.display = "none";
+
   // Reset validation
   validateForm();
   clearError();
@@ -483,14 +500,14 @@ function resetAddPhotoForm() {
 // Show error message
 function showError(message) {
   clearError();
-  const modalContent = document.querySelector('.modal-content');
+  const modalContent = document.querySelector(".modal-content");
   if (modalContent) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.color = '#d65353';
-    errorDiv.style.textAlign = 'center';
-    errorDiv.style.marginBottom = '20px';
-    errorDiv.style.fontFamily = 'Work Sans';
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "error-message";
+    errorDiv.style.color = "#d65353";
+    errorDiv.style.textAlign = "center";
+    errorDiv.style.marginBottom = "20px";
+    errorDiv.style.fontFamily = "Work Sans";
     errorDiv.textContent = message;
     modalContent.insertBefore(errorDiv, modalContent.firstChild);
   }
@@ -499,17 +516,17 @@ function showError(message) {
 // Show success message
 function showSuccess(message) {
   clearError();
-  const modalContent = document.querySelector('.modal-content');
+  const modalContent = document.querySelector(".modal-content");
   if (modalContent) {
-    const successDiv = document.createElement('div');
-    successDiv.className = 'success-message';
-    successDiv.style.color = '#1d6154';
-    successDiv.style.textAlign = 'center';
-    successDiv.style.marginBottom = '20px';
-    successDiv.style.fontFamily = 'Work Sans';
+    const successDiv = document.createElement("div");
+    successDiv.className = "success-message";
+    successDiv.style.color = "#1d6154";
+    successDiv.style.textAlign = "center";
+    successDiv.style.marginBottom = "20px";
+    successDiv.style.fontFamily = "Work Sans";
     successDiv.textContent = message;
     modalContent.insertBefore(successDiv, modalContent.firstChild);
-    
+
     // Remove success message after 3 seconds
     setTimeout(() => {
       successDiv.remove();
@@ -519,6 +536,8 @@ function showSuccess(message) {
 
 // Clear error/success messages
 function clearError() {
-  const existingMessages = document.querySelectorAll('.error-message, .success-message');
-  existingMessages.forEach(msg => msg.remove());
+  const existingMessages = document.querySelectorAll(
+    ".error-message, .success-message"
+  );
+  existingMessages.forEach((msg) => msg.remove());
 }
