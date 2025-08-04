@@ -1,48 +1,63 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('login-form');
-    const errorMessage = document.getElementById('error-message');
+const API_URL = "http://localhost:5678/api";
 
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('http://localhost:5678/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                
-                // Store the token in localStorage
-                localStorage.setItem('authToken', data.token);
-                localStorage.setItem('userId', data.userId);
-                
-                // Hide error message if it was shown
-                errorMessage.style.display = 'none';
-                
-                // Redirect to main page
-                window.location.href = 'index.html';
-            } else {
-                // Show error message
-                errorMessage.style.display = 'block';
-                
-                // Clear the form
-                document.getElementById('email').value = '';
-                document.getElementById('password').value = '';
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            errorMessage.style.display = 'block';
-        }
+async function handleLogin(email, password) {
+  try {
+    const response = await fetch(`${API_URL}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
+
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userId", data.userId);
+      return { success: true };
+    } else {
+      return { success: false, error: "Invalid credentials" };
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    return { success: false, error: "Network error" };
+  }
+}
+
+function showError(message) {
+  const errorMessage = document.getElementById("error-message");
+  if (errorMessage) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "block";
+  }
+}
+
+function clearForm() {
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      showError("Please fill in all fields");
+      return;
+    }
+
+    const result = await handleLogin(email, password);
+    
+    if (result.success) {
+      window.location.href = "index.html";
+    } else {
+      showError(result.error);
+      clearForm();
+    }
+  });
 });

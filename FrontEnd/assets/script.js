@@ -29,10 +29,10 @@ function displayWorks(works) {
   });
 }
 
-//dynamically add filter buttons + helper methods
+
 async function fetchCategories() {
   try {
-    // await the response using a template literal plus API variable
+    // await the categories using a template literal plus API variable
     const response = await fetch(`${API_URL}/categories`);
     const categories = await response.json();
     return categories;
@@ -163,7 +163,6 @@ function closeModal() {
   }
 
   toggleEditMode(); // Exit edit mode when closing modal
-  
 }
 
 async function loadModalGallery() {
